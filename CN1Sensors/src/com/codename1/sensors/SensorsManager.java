@@ -9,7 +9,8 @@ import com.codename1.system.NativeLookup;
 import com.codename1.ui.Display;
 
 /**
- *
+ * This is the SensorsManager
+ * 
  * @author Chen
  */
 public class SensorsManager {
@@ -36,6 +37,13 @@ public class SensorsManager {
         this.type = type;
     }
 
+    /**
+     * Returns SensorsManager instance.
+     * @param type one of the following TYPE_GYROSCOPE, TYPE_ACCELEROMETER
+     * or TYPE_MAGNETIC
+     * @return SensorsManager instance or null if this sensor does not exist on
+     * the device.
+     */ 
     public static SensorsManager getSenorsManager(int type) {
         sensors = (SensorsNative) NativeLookup.create(SensorsNative.class);
         if (sensors != null && sensors.isSupported()) {
@@ -54,6 +62,9 @@ public class SensorsManager {
         return null;
     }
 
+    /**
+     * Registers a SensorListener to get sensor notifications from the device
+     */ 
     public void registerListener(SensorListener listener) {
         if(this.listener == null && listener == null){
             return;
@@ -64,11 +75,17 @@ public class SensorsManager {
         this.listener = listener;
     }
     
+    /**
+     * De-registers a SensorListener from getting callbacks from the device
+     */ 
     public void deregisterListener(SensorListener listener) {
         sensors.deregisterListener(type);        
         this.listener = null;
     }
 
+    /**
+     * This method is used by the underlying native platform.
+     */ 
     public static void onSensorChanged(int type, final float x, final float y, final float z) {
         final long timeStamp = System.currentTimeMillis();
         if (type == TYPE_ACCELEROMETER) {
