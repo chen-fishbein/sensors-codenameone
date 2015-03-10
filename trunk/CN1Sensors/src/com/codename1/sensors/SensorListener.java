@@ -11,6 +11,13 @@ package com.codename1.sensors;
  */
 public interface SensorListener {
     
+    /**
+     * This method called when a sensor event is being sent from the device.
+     * @param timeStamp event time
+     * @param x value
+     * @param y value
+     * @param z value
+     */ 
     public void onSensorChanged(long timeStamp, float x, float y, float z);
             
 }
