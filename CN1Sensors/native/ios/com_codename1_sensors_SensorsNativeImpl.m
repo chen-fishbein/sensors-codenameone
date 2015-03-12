@@ -14,7 +14,10 @@ CMMotionManager *motionManager = nil;
     } else if (param == 1) {
         motionManager.accelerometerUpdateInterval = 0.2;
     }else if (param == 2) {
-        motionManager.magnetometerUpdateInterval = 0.2;
+        //motionManager.magnetometerUpdateInterval = 0.2;
+        
+        motionManager.deviceMotionUpdateInterval = 0.1;
+        
     }
 }
 
@@ -25,7 +28,9 @@ CMMotionManager *motionManager = nil;
     }else if (param == 1) {
         [motionManager stopAccelerometerUpdates];
     }else if (param == 2) {
-        [motionManager stopMagnetometerUpdates];
+        //[motionManager stopMagnetometerUpdates];
+        
+        [motionManager stopDeviceMotionUpdates];
     }
  
 }
@@ -39,9 +44,9 @@ CMMotionManager *motionManager = nil;
 
                 dispatch_async(dispatch_get_main_queue(), ^ {
                     com_codename1_sensors_SensorsManager_onSensorChanged___int_float_float_float(CN1_THREAD_GET_STATE_PASS_ARG 0,
-                    gyroData.rotationRate.x,
-                    gyroData.rotationRate.y,
-                    gyroData.rotationRate.z);
+                    -gyroData.rotationRate.x,
+                    -gyroData.rotationRate.y,
+                    -gyroData.rotationRate.z);
                 });
             }
             ];
@@ -50,7 +55,7 @@ CMMotionManager *motionManager = nil;
     } else if (param == 1) {
         if ([motionManager isAccelerometerAvailable]) {
             NSOperationQueue *queue = [[NSOperationQueue alloc] init];
-
+            
             [motionManager startAccelerometerUpdatesToQueue : queue withHandler : ^(CMAccelerometerData *accelerometerData, NSError * error) {
 
                 dispatch_async(dispatch_get_main_queue(), ^ {
@@ -64,18 +69,29 @@ CMMotionManager *motionManager = nil;
         }
     } else if (param == 2) {
         if ([motionManager isMagnetometerAvailable]) {
+            //[motionManager startMagnetometerUpdates];
             NSOperationQueue *queue = [[NSOperationQueue alloc] init];
-
+            [motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXTrueNorthZVertical toQueue:queue withHandler:^(CMDeviceMotion *magnetometerData, NSError * error) {
+                
+                dispatch_async(dispatch_get_main_queue(), ^ {
+                    com_codename1_sensors_SensorsManager_onSensorChanged___int_float_float_float(CN1_THREAD_GET_STATE_PASS_ARG 2,
+                                                                                                 -magnetometerData.magneticField.field.x,
+                                                                                                 -magnetometerData.magneticField.field.y,
+                                                                                                 -magnetometerData.magneticField.field.z);
+                });
+            }
+             ];
+            /*
             [motionManager startMagnetometerUpdatesToQueue : queue withHandler : ^(CMMagnetometerData *magnetometerData, NSError * error) {
 
                 dispatch_async(dispatch_get_main_queue(), ^ {
                     com_codename1_sensors_SensorsManager_onSensorChanged___int_float_float_float(CN1_THREAD_GET_STATE_PASS_ARG 2,
-                    magnetometerData.magneticField.x,
-                    magnetometerData.magneticField.y,
-                    magnetometerData.magneticField.z);
+                    -magnetometerData.magneticField.x,
+                    -magnetometerData.magneticField.y,
+                    -magnetometerData.magneticField.z);
                 });
             }
-            ];
+            ];*/
         }
     }
 
