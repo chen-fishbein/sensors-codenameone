@@ -4,21 +4,31 @@
 @implementation com_codename1_sensors_SensorsNativeImpl
 
 CMMotionManager *motionManager = nil;
+int sensorType = -1;
+int sensorSamplingRate = 0.2;
 
 -(void) init : (int) param {
-    if(motionManager == nil){
+    if(motionManager == nil) {
         motionManager = [[CMMotionManager alloc] init];
+        sensorType = param;
+        if(param == 2)
+            sensorSamplingRate = 0.1;
     }
+
     if (param == 0) {
-        motionManager.gyroUpdateInterval = 0.2;
+        motionManager.gyroUpdateInterval = sensorSamplingRate;
     } else if (param == 1) {
-        motionManager.accelerometerUpdateInterval = 0.2;
+        motionManager.accelerometerUpdateInterval = sensorSamplingRate;
     }else if (param == 2) {
-        //motionManager.magnetometerUpdateInterval = 0.2;
-        
-        motionManager.deviceMotionUpdateInterval = 0.1;
-        
+        //motionManager.magnetometerUpdateInterval = sensorSamplingRate;
+
+        motionManager.deviceMotionUpdateInterval = sensorSamplingRate;
     }
+}
+
+-(void) setSamplingRate : (int) param {
+    sensorSamplingRate = param/1000000;
+    [motionManager init:sensorType];
 }
 
 -(void) deregisterListener : (int) param {

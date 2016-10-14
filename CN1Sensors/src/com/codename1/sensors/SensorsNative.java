@@ -14,9 +14,11 @@ import com.codename1.system.NativeInterface;
 public interface SensorsNative extends NativeInterface{
     
     public void init(int type);
+
+    public void setSamplingRate(int samplingRate);
     
     public void registerListener(int type);
-    
+
     public void deregisterListener(int type);
     
 }

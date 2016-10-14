@@ -6,6 +6,7 @@
 }
 
 -(void)init:(int)param;
+-(void)setSamplingRate:(int)param;
 -(void)deregisterListener:(int)param;
 -(void)registerListener:(int)param;
 -(BOOL)isSupported;

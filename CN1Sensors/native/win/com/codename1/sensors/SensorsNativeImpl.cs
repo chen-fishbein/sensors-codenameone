@@ -7,6 +7,9 @@ public class SensorsNativeImpl {
     public void init(int param) {
     }
 
+    public void setSamplingRate(int param) {
+    }
+
     public void deregisterListener(int param) {
     }
 

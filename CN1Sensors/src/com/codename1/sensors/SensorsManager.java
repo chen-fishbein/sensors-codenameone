@@ -23,6 +23,8 @@ public class SensorsManager {
     
     private int type;
 
+    private int samplingRate;
+
     private SensorListener listener;
 
     private static SensorsManager gyro;
@@ -41,10 +43,11 @@ public class SensorsManager {
      * Returns SensorsManager instance.
      * @param type one of the following TYPE_GYROSCOPE, TYPE_ACCELEROMETER
      * or TYPE_MAGNETIC
+     * @param samplingRate how often (in microseconds) you want to see sensor events reported. If null, default sampling rate will be used.
      * @return SensorsManager instance or null if this sensor does not exist on
      * the device.
      */ 
-    public static SensorsManager getSenorsManager(int type) {
+    public static SensorsManager getSensorsManager(int type, int samplingRate) {
         sensors = (SensorsNative) NativeLookup.create(SensorsNative.class);
         if (sensors != null && sensors.isSupported()) {
             SensorsManager sensor = new SensorsManager(type);
@@ -56,17 +59,30 @@ public class SensorsManager {
                 magnetic = sensor;
             }
             sensors.init(type);
+            if(samplingRate > 0)
+                sensors.setSamplingRate(samplingRate);
             return sensor;
         }
         //not supported
         return null;
     }
 
+    public static SensorsManager getSensorsManager(int type) {
+        return getSensorsManager(type, 0);
+    }
+
+    /**
+     * Functional alias (with a typo) for getSensorsManager(int type). Left around to avoid errors with existing code.
+     */
+    public static SensorsManager getSenorsManager(int type) {
+        return getSensorsManager(type, 0);
+    }
+
     /**
      * Registers a SensorListener to get sensor notifications from the device
      */ 
     public void registerListener(SensorListener listener) {
-        if(this.listener == null && listener == null){
+        if(this.listener == null && listener == null) {
             return;
         }
         if(listener != null){
@@ -74,7 +90,7 @@ public class SensorsManager {
         }
         this.listener = listener;
     }
-    
+
     /**
      * De-registers a SensorListener from getting callbacks from the device
      */ 
