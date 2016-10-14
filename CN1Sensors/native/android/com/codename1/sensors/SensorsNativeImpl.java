@@ -13,7 +13,8 @@ public class SensorsNativeImpl {
     private android.hardware.SensorEventListener accelListener;
     private android.hardware.SensorEventListener gyroListener;
     private android.hardware.SensorEventListener magnetListener;
-    
+
+    private int samplingRate = SensorManager.SENSOR_DELAY_NORMAL;
 
     public void init(int type) {
         if (sensorManager == null) {
@@ -26,6 +27,10 @@ public class SensorsNativeImpl {
         }else if (type == SensorsManager.TYPE_MAGNETIC) {
             magnet = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         }
+    }
+
+    public void setSamplingRate(int desiredSamplingRate) {
+        samplingRate = desiredSamplingRate;
     }
 
     public void deregisterListener(int type) {
@@ -51,7 +56,7 @@ public class SensorsNativeImpl {
                 }
 
             };
-            sensorManager.registerListener(gyroListener, gyro, SensorManager.SENSOR_DELAY_NORMAL);
+            sensorManager.registerListener(gyroListener, gyro, samplingRate);
         } else if (type == SensorsManager.TYPE_ACCELEROMETER) {
             accelListener = new android.hardware.SensorEventListener() {
  
@@ -64,7 +69,7 @@ public class SensorsNativeImpl {
                 }
 
             };
-            sensorManager.registerListener(accelListener, accel, SensorManager.SENSOR_DELAY_NORMAL);
+            sensorManager.registerListener(accelListener, accel, samplingRate);
         } else if (type == SensorsManager.TYPE_MAGNETIC) {
             magnetListener = new android.hardware.SensorEventListener() {
  
@@ -77,7 +82,7 @@ public class SensorsNativeImpl {
                 }
 
             };
-            sensorManager.registerListener(magnetListener, magnet, SensorManager.SENSOR_DELAY_NORMAL);
+            sensorManager.registerListener(magnetListener, magnet, samplingRate);
         }
     }
 
